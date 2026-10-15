@@ -12,3 +12,4 @@
 - Keep storefront product data in one shared browser-safe module so homepage and store listings stay consistent.
 - Use the shared storefront shell for navigation and product dialogs; content pages retain their own route metadata.
 - Reference imagery is served through asset pointers rather than embedded screenshot files.
+- Navigation destinations each have a content route; wallet and order pages show unavailable states until real account services are connected.
