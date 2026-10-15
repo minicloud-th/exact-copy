@@ -8,3 +8,7 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep storefront product data in one shared browser-safe module so homepage and store listings stay consistent.
+- Use the shared storefront shell for navigation and product dialogs; content pages retain their own route metadata.
+- Reference imagery is served through asset pointers rather than embedded screenshot files.
