@@ -1,9 +1,8 @@
 import { Link, useRouterState } from '@tanstack/react-router';
 import { useState, createContext, useContext, type ReactNode } from 'react';
-import { Search, ChevronRight, X, MessageCircle, ShoppingBag, LogIn } from 'lucide-react';
+import { Search, ChevronRight, X, MessageCircle, ShoppingBag, LogIn, Sun, Moon, CodeXml } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import logo from '@/assets/logo.asset.json';
 import type { Product } from '@/lib/products';
 
 const ShopContext = createContext({ query: '', setQuery: (_value: string) => {}, openProduct: (_product: Product) => {} });
@@ -15,19 +14,23 @@ export function Storefront({ children }: { children: ReactNode }) {
   const [login, setLogin] = useState(false);
   const [product, setProduct] = useState<Product | null>(null);
   const [support, setSupport] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [light, setLight] = useState(false);
   return <ShopContext.Provider value={{ query, setQuery, openProduct: setProduct }}>
-    <header className="site-header"><div className="site-width header-inner">
-      <Link to="/" className="brand"><img src={logo.url} alt="QUIXYSHOP" /></Link>
-      <nav aria-label="เมนูหลัก"><Link to="/" className={pathname === '/' ? 'nav-link active' : 'nav-link'}>หน้าแรก</Link><Link to="/store" className={pathname === '/store' ? 'nav-link active' : 'nav-link'}>ร้านค้า</Link><Link to="/sms" className={pathname === '/sms' ? 'nav-link active' : 'nav-link'}>ซื้อเบอร์ sms</Link></nav>
-      <label className="header-search"><Search size={18}/><input aria-label="ค้นหาสินค้า" placeholder="ค้นหาเกม / บัตรเติมเงิน..." value={query} onChange={event => setQuery(event.target.value)}/>{query && <Button variant="ghost" size="icon" aria-label="ล้างการค้นหา" onClick={() => setQuery('')}><X/></Button>}</label>
-      <Button className="login-button" onClick={() => setLogin(true)}>เข้าสู่ระบบ</Button>
+    <div className="storefront-shell" data-theme={light ? 'light' : 'dark'}>
+    <header className="site-header"><div className="header-inner">
+      <Link to="/" className="brand" aria-label="dekdev หน้าแรก"><CodeXml aria-hidden="true"/><span>dekdev</span></Link>
+      <nav aria-label="เมนูหลัก"><Link to="/" className={pathname === '/' ? 'nav-link active' : 'nav-link'}>หน้าแรก</Link><Link to="/store" className={pathname === '/store' ? 'nav-link active' : 'nav-link'}>ร้านค้า</Link><Link to="/topup" className={pathname === '/topup' ? 'nav-link active' : 'nav-link'}>เติมเงิน</Link><Link to="/orders" className={pathname === '/orders' ? 'nav-link active' : 'nav-link'}>ประวัติการซื้อ</Link><Link to="/contact" className={pathname === '/contact' ? 'nav-link active' : 'nav-link'}>ติดต่อเรา</Link></nav>
+      <div className="header-actions"><Button variant="ghost" size="icon" className="header-icon" aria-label="เปิดค้นหาสินค้า" title="ค้นหาสินค้า" onClick={() => setSearchOpen(!searchOpen)}><Search/></Button><Button variant="ghost" size="icon" className="theme-icon" aria-label={light ? 'ใช้ธีมมืด' : 'ใช้ธีมสว่าง'} title={light ? 'ใช้ธีมมืด' : 'ใช้ธีมสว่าง'} onClick={() => setLight(!light)}>{light ? <Moon/> : <Sun/>}</Button><Button className="login-button" onClick={() => setLogin(true)}><LogIn/>เข้าสู่ระบบ</Button></div>
+      {searchOpen && <label className="header-search"><Search size={18}/><input autoFocus aria-label="ค้นหาสินค้า" placeholder="ค้นหาสินค้า..." value={query} onChange={event => setQuery(event.target.value)}/><Button variant="ghost" size="icon" aria-label="ปิดการค้นหา" onClick={() => { setQuery(''); setSearchOpen(false); }}><X/></Button></label>}
     </div></header>
     {children}
-    <footer className="site-width site-footer"><img src={logo.url} alt="QUIXYSHOP"/><span>© 2026 QUIXYSHOP</span></footer>
+    <footer className="site-width site-footer"><Link to="/" className="brand"><CodeXml/><span>dekdev</span></Link><span>© 2026 dekdev</span></footer>
     <Button className="support-button" onClick={() => setSupport(true)}><span>ติดต่อสอบถาม แจ้งปัญหา</span><MessageCircle size={26}/></Button>
-    <Dialog open={login} onOpenChange={setLogin}><DialogContent className="shop-dialog"><DialogHeader><DialogTitle>เข้าสู่ระบบ</DialogTitle><DialogDescription>บัญชีสมาชิก QUIXYSHOP</DialogDescription></DialogHeader><div className="dialog-notice"><LogIn/><p>ระบบสมาชิกยังไม่เปิดใช้งานบนเว็บตัวอย่างนี้</p></div><Button onClick={() => setLogin(false)}>กลับไปเลือกสินค้า</Button></DialogContent></Dialog>
+    <Dialog open={login} onOpenChange={setLogin}><DialogContent className="shop-dialog"><DialogHeader><DialogTitle>เข้าสู่ระบบ</DialogTitle><DialogDescription>บัญชีสมาชิก dekdev</DialogDescription></DialogHeader><div className="dialog-notice"><LogIn/><p>ระบบสมาชิกยังไม่เปิดใช้งานบนเว็บตัวอย่างนี้</p></div><Button onClick={() => setLogin(false)}>กลับไปเลือกสินค้า</Button></DialogContent></Dialog>
     <Dialog open={!!product} onOpenChange={open => { if (!open) setProduct(null); }}><DialogContent className="shop-dialog"><DialogHeader><DialogTitle>{product?.name}</DialogTitle><DialogDescription>{product?.category}</DialogDescription></DialogHeader>{product && <><img className="detail-image" src={product.image} alt={product.name}/><div className="detail-price"><span>ราคา</span><strong>{product.price} <span className="currency">฿</span></strong></div><p className="text-muted-foreground text-sm">{product.delivery ? 'สินค้าพร้อมส่ง' : `คงเหลือ ${product.stock} ชิ้น`}</p><Button disabled={product.stock === 0 && !product.delivery} onClick={() => { setProduct(null); setLogin(true); }}><ShoppingBag/>{product.stock === 0 && !product.delivery ? 'สินค้าหมด' : 'เข้าสู่ระบบเพื่อสั่งซื้อ'}</Button></>}</DialogContent></Dialog>
-    <Dialog open={support} onOpenChange={setSupport}><DialogContent className="shop-dialog"><DialogHeader><DialogTitle>ติดต่อสอบถาม แจ้งปัญหา</DialogTitle><DialogDescription>QUIXYSHOP</DialogDescription></DialogHeader><p className="text-muted-foreground text-sm">ยังไม่ได้เชื่อมต่อช่องทางติดต่อของร้าน</p><Button onClick={() => setSupport(false)}>ปิด</Button></DialogContent></Dialog>
+    <Dialog open={support} onOpenChange={setSupport}><DialogContent className="shop-dialog"><DialogHeader><DialogTitle>ติดต่อสอบถาม แจ้งปัญหา</DialogTitle><DialogDescription>dekdev</DialogDescription></DialogHeader><p className="text-muted-foreground text-sm">ยังไม่ได้เชื่อมต่อช่องทางติดต่อของร้าน</p><Button onClick={() => setSupport(false)}>ปิด</Button></DialogContent></Dialog>
+    </div>
   </ShopContext.Provider>;
 }
 

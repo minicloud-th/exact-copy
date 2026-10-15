@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ProductCard, useShop } from '@/components/storefront';
 import { filterProducts, products } from '@/lib/products';
 export const Route = createFileRoute('/store')({
- head: () => ({ meta: [{ title:'ร้านค้า | QUIXYSHOP' }, { name:'description', content:'เลือกซื้อ Youtube Premium, Netflix, Nitro, Canva และบัญชี AI ที่ QUIXYSHOP' }, { property:'og:title', content:'ร้านค้า | QUIXYSHOP' }, { property:'og:description', content:'แอพพรีเมียมและบัญชีออนไลน์ทุกหมวดหมู่' }, { property:'og:type', content:'website' }, { name:'twitter:card', content:'summary_large_image' }] }),
+ head: () => ({ meta: [{ title:'ร้านค้า | dekdev' }, { name:'description', content:'เลือกซื้อ Youtube Premium, Netflix, Nitro, Canva และบัญชี AI ที่ dekdev' }, { property:'og:title', content:'ร้านค้า | dekdev' }, { property:'og:description', content:'แอพพรีเมียมและบัญชีออนไลน์ทุกหมวดหมู่' }, { property:'og:type', content:'website' }, { name:'twitter:card', content:'summary_large_image' }] }),
  component: Store,
 });
 function Store() {
